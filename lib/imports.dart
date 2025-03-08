@@ -13,8 +13,12 @@ export 'responsive.dart';
 // Screens
 export 'screens/auth/login.dart';
 export 'screens/splash/splash_scren.dart';
+export 'package:skill_swap_frontend/screens/auth/sign_up.dart';
 
 // Services
+export 'package:skill_swap_frontend/screens/home/home_screen.dart';
+export 'package:skill_swap_frontend/services/api_service/injection.dart';
+export 'package:skill_swap_frontend/services/storage_service/my_shared_preference.dart';
 
 // Widgets
 export 'package:skill_swap_frontend/widgets/custom_button.dart';

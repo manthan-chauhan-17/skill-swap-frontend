@@ -1,7 +1,4 @@
-// colors.dart
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'responsive.dart';
+import 'imports.dart';
 
 class AppColors {
   static const Color primary = Color(0xFF483D8B); // Dark Slate Blue
