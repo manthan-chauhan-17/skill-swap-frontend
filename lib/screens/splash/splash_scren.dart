@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:skill_swap_frontend/imports.dart';
 
 class SplashScren extends StatefulWidget {
@@ -9,9 +11,13 @@ class SplashScren extends StatefulWidget {
 
 class _SplashScrenState extends State<SplashScren> {
   loginCheck() async {
+    var isLoggedIn = await MySharedPreference.getLoggedinStatus();
     await Future.delayed(const Duration(seconds: 4)).then((value) {
-      Navigator.pushAndRemoveUntil(context,
-          MaterialPageRoute(builder: (context) => Login()), (route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => isLoggedIn ? HomeScreen() : Login()),
+          (route) => false);
     });
   }
 

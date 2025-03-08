@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-
-import '../theme.dart';
+import 'package:skill_swap_frontend/imports.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;

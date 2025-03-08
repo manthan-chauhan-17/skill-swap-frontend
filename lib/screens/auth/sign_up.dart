@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
 import 'package:skill_swap_frontend/imports.dart';
 
 class Signup extends StatelessWidget {
@@ -8,6 +10,7 @@ class Signup extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController nameController = TextEditingController();
+    Map<String, dynamic> userData = {};
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -18,7 +21,6 @@ class Signup extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Image.asset("assets/images/login.png"),
                 Text(
                   "SkillSwap",
                   style: AppTextStyles.heading(context).copyWith(
@@ -62,7 +64,49 @@ class Signup extends StatelessWidget {
                 SizedBox(height: 0.03 * getHeight(context)),
 
                 // Login Button
-                CustomButton(text: "Signup"),
+                CustomButton(
+                  text: "Signup",
+                  onPressed: () async {
+                    // Adding data into body
+                    userData = {
+                      "name": nameController.text,
+                      "email": emailController.text,
+                      "password": passwordController.text,
+                    };
+
+                    // API Call
+                    await restClient.signInUser(userData).then((value) async {
+                      log(value.toString(), name: "Response");
+
+                      if (value['status'] == 201) {
+                        await MySharedPreference.setLoggedinStatus(true);
+                        await MySharedPreference.setUserName(
+                            nameController.text);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Registered Successfully",
+                              style: AppTextStyles.body(context).copyWith(
+                                color: AppColors.white,
+                              ),
+                            ),
+                            backgroundColor: AppColors.secondary,
+                          ),
+                        );
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      }
+                    }).onError((error, stackTrace) {
+                      log(error.toString(), name: "Error");
+                    });
+                  },
+                ),
 
                 SizedBox(height: 0.02 * getHeight(context)),
 
