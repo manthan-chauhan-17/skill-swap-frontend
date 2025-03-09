@@ -1,9 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
 
 import 'package:skill_swap_frontend/imports.dart';
-import 'package:skill_swap_frontend/services/storage_service/my_shared_preference.dart';
+import 'package:skill_swap_frontend/widgets/custom_snackbar.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -13,6 +11,15 @@ class Login extends StatelessWidget {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
     Map<String, dynamic> credentials = {};
+
+    void storeDataInSharedPreference(
+        String token, String name, String email) async {
+      await MySharedPreference.setLoggedinStatus(true);
+      await MySharedPreference.setAuthToken(token);
+      await MySharedPreference.setUserName(name);
+      await MySharedPreference.setUserEmail(email);
+    }
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -82,21 +89,16 @@ class Login extends StatelessWidget {
                       log(value.toString(), name: "Response");
 
                       if (value['status'] == 200) {
-                        await MySharedPreference.setLoggedinStatus(true);
-                        await MySharedPreference.setAuthToken(value['token']);
+                        // Storing data in shared preference on success creation of account
+                        storeDataInSharedPreference(value['token'],
+                            value['name'], emailController.text);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Logged in Successfully",
-                              style: AppTextStyles.body(context).copyWith(
-                                color: AppColors.white,
-                              ),
-                            ),
-                            backgroundColor: AppColors.secondary,
-                          ),
-                        );
+                        // Showing snackbar message
+                        CustomSnackbar.show(context,
+                            message: "Login Successful",
+                            backgroundColor: AppColors.primary);
 
+                        // Navigating to home screen
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

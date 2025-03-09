@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'package:skill_swap_frontend/imports.dart';
+import 'package:skill_swap_frontend/widgets/custom_snackbar.dart';
 
 class Signup extends StatelessWidget {
   const Signup({super.key});
@@ -11,6 +12,12 @@ class Signup extends StatelessWidget {
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController nameController = TextEditingController();
     Map<String, dynamic> userData = {};
+
+    void storingDataInSharedPreference(String userName, String email) async {
+      await MySharedPreference.setLoggedinStatus(true);
+      await MySharedPreference.setUserName(userName);
+      await MySharedPreference.setUserEmail(email);
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -79,22 +86,18 @@ class Signup extends StatelessWidget {
                       log(value.toString(), name: "Response");
 
                       if (value['status'] == 201) {
-                        await MySharedPreference.setLoggedinStatus(true);
-                        await MySharedPreference.setUserName(
-                            nameController.text);
+                        // Storing data in shared preference on success creation of account
+                        storingDataInSharedPreference(
+                            nameController.text, emailController.text);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "Registered Successfully",
-                              style: AppTextStyles.body(context).copyWith(
-                                color: AppColors.white,
-                              ),
-                            ),
-                            backgroundColor: AppColors.secondary,
-                          ),
+                        // Showing snackbar message
+                        CustomSnackbar.show(
+                          context,
+                          message: "Registered Successfully",
+                          backgroundColor: AppColors.secondary,
                         );
 
+                        // Navigating to home screen
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
