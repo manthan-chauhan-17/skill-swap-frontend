@@ -4,6 +4,7 @@ class MySharedPreference {
   static bool isLoggedin = false;
   static String userName = "";
   static String authToken = "";
+  static String userEmail = "";
 
   static setLoggedinStatus(bool loggedinStatus) async {
     final prefs = await SharedPreferences.getInstance();
@@ -23,7 +24,7 @@ class MySharedPreference {
     await prefs.setString("user_name", name);
   }
 
-  Future<String> getUserName() async {
+  static Future<String> getUserName() async {
     final prefs = await SharedPreferences.getInstance();
     userName = prefs.getString("user_name") ?? "";
     return userName;
@@ -39,5 +40,17 @@ class MySharedPreference {
     final prefs = await SharedPreferences.getInstance();
     authToken = prefs.getString("auth_token") ?? "";
     return authToken;
+  }
+
+  static setUserEmail(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    userEmail = name;
+    await prefs.setString("user_email", name);
+  }
+
+  static Future<String> getUserEmail() async {
+    final prefs = await SharedPreferences.getInstance();
+    userEmail = prefs.getString("user_email") ?? "";
+    return userEmail;
   }
 }
